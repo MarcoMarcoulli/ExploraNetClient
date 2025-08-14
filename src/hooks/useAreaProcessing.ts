@@ -48,13 +48,13 @@ export const useAreaProcessing = (
 
     try {
       const respRoads = await axios.post<OverpassResponse>(
-        "https://overpass.private.coffee/api/interpreter",
+        "https://overpass-api.de/api/interpreter",
         queryRoads,
         { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
       );
 
       const respTrails = await axios.post<OverpassResponse>(
-        "https://overpass.private.coffee/api/interpreter",
+        "https://overpass-api.de/api/interpreter",
         queryTrails,
         { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
       );
