@@ -43,7 +43,7 @@ export const useAreaProcessing = (
     setArea(areaKm2);
 
     const polyString = polygonPoints.map((p) => `${p[0]} ${p[1]}`).join(" ");
-    const queryRoads = `[out:json][timeout:25];way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential)$\"](poly:\"${polyString}\");out body geom;`;
+    const queryRoads = `[out:json][timeout:25];way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|road|motorway_link|trunk_link|service)$\"](poly:\"${polyString}\");out body geom;`;
     const queryTrails = `[out:json][timeout:25];way[\"highway\"~\"^(pedestrian|track|path|footway|bridleway|steps|via_ferrata|cycleway)$\"](poly:\"${polyString}\");out body geom;`;
 
     try {
