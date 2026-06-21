@@ -47,15 +47,20 @@ export const useAreaProcessing = (
     const queryRoads = `[out:json][timeout:${timeout}];way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|road|motorway_link|trunk_link|service)$\"](poly:\"${polyString}\");out body geom;`;
     const queryTrails = `[out:json][timeout:${timeout}];way[\"highway\"~\"^(pedestrian|track|path|footway|bridleway|steps|via_ferrata|cycleway)$\"](poly:\"${polyString}\");out body geom;`;
 
+    const targetUrl = "https://overpass-api.de/api/interpreter"; 
+
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+    
     try {
       const respRoads = await axios.post<OverpassResponse>(
-        "https://overpass.openstreetmap.fr/api/interpreter",
+        proxyUrl,
         queryRoads,
         { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
       );
 
       const respTrails = await axios.post<OverpassResponse>(
         "https://overpass.openstreetmap.fr/api/interpreter",
+        proxyUrl,
         queryTrails,
         { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
       );
