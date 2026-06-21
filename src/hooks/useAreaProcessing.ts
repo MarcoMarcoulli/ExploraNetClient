@@ -59,7 +59,6 @@ export const useAreaProcessing = (
       );
 
       const respTrails = await axios.post<OverpassResponse>(
-        "https://overpass.openstreetmap.fr/api/interpreter",
         proxyUrl,
         queryTrails,
         { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
