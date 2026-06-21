@@ -12,15 +12,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing query parameter in body' });
     }
       
-    const urlWithQuery = `https://overpass.kumi.systems/api/interpreter?data=${encodeURIComponent(query)}`;
+    // Impacchettiamo la query come se fosse un modulo inviato da una pagina web standard
+    const params = new URLSearchParams();
+    params.append('data', query);
     
-    const response = await axios({
-      method: 'get', 
-      url: urlWithQuery,
+    // Torniamo al server principale di Overpass (o puoi tenere kumi, funzionerà con entrambi)
+    const overpassUrl = 'https://overpass-api.de/api/interpreter';
+    
+    const response = await axios.post(overpassUrl, params.toString(), {
       headers: { 
+        // Questo è il trucco magico per i firewall: far finta che sia un form HTML
+        'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': '*/*',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
       },
       responseType: 'json' 
     });
