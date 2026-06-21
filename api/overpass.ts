@@ -12,17 +12,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!query) {
       return res.status(400).json({ error: 'Missing query parameter in body' });
     }
-      
+
     const urlWithQuery = `https://overpass.kumi.systems/api/interpreter?data=${encodeURIComponent(query)}`;
     
     const response = await axios({
-      method: 'post',
+      method: 'get', 
       url: urlWithQuery,
-      data: query,
       headers: { 
-        'Content-Type': 'text/plain',
         'Accept': '*/*',
-        // Sostituiamo l'identità di Axios con quella di un browser comune per ingannare Apache
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
       },
