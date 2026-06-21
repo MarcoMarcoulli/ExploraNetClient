@@ -50,14 +50,14 @@ export const useAreaProcessing = (
     try {
       const respRoads = await axios.post<OverpassResponse>(
         "/api/overpass",
-        queryRoads,
-        { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
+        { query: queryRoads },
+        { signal: controller.signal, headers: { "Content-Type": "application/json" } }
       );
 
       const respTrails = await axios.post<OverpassResponse>(
         "/api/overpass",
-        queryTrails,
-        { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
+        { query: queryTrails },
+        { signal: controller.signal, headers: { "Content-Type": "application/json" } }
       );
 
       const clippedRoads: LatLngTuple[][] = [];
