@@ -55,7 +55,7 @@ export const useAreaProcessing = (
       );
 
       const respTrails = await axios.post<OverpassResponse>(
-        "https://overpass-api.de/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter",
         queryTrails,
         { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
       );
