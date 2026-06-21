@@ -15,9 +15,8 @@ export default async function handler(req, res) {
     // Impacchettiamo la query come se fosse un modulo inviato da una pagina web standard
     const params = new URLSearchParams();
     params.append('data', query);
-    
-    // Torniamo al server principale di Overpass (o puoi tenere kumi, funzionerà con entrambi)
-    const overpassUrl = 'https://overpass-api.de/api/interpreter';
+
+    const overpassUrl = 'https://overpass.kumi.systems/api/interpreter';
     
     const response = await axios.post(overpassUrl, params.toString(), {
       headers: { 
