@@ -50,27 +50,23 @@ export const useAreaProcessing = (
     const overpassUrl = "https://overpass.kumi.systems/api/interpreter"; 
 
     try {
-      // Impacchettiamo le query come se fossero state scritte in un form HTML
       const paramsRoads = new URLSearchParams();
       paramsRoads.append("data", queryRoads);
 
       const paramsTrails = new URLSearchParams();
       paramsTrails.append("data", queryTrails);
 
-      // Chiamata diretta a Overpass per le Strade
       const respRoads = await axios.post<OverpassResponse>(
         overpassUrl,
-        paramsRoads, // Passiamo l'oggetto URLSearchParams
+        paramsRoads, 
         { 
           signal: controller.signal, 
           headers: { 
-            // Questo header è la chiave magica per non far scattare il CORS
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" 
           } 
         }
       );
 
-      // Chiamata diretta a Overpass per i Sentieri
       const respTrails = await axios.post<OverpassResponse>(
         overpassUrl,
         paramsTrails,
