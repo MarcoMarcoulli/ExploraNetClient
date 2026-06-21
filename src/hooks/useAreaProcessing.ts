@@ -47,21 +47,39 @@ export const useAreaProcessing = (
     const queryRoads = `[out:json][timeout:${timeout}];way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|road|motorway_link|trunk_link|service)$\"](poly:\"${polyString}\");out body geom;`;
     const queryTrails = `[out:json][timeout:${timeout}];way[\"highway\"~\"^(pedestrian|track|path|footway|bridleway|steps|via_ferrata|cycleway)$\"](poly:\"${polyString}\");out body geom;`;
 
-    const targetUrl = "https://overpass-api.de/api/interpreter"; 
+    const overpassUrl = "https://overpass.kumi.systems/api/interpreter"; 
 
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
-    
     try {
+      // Impacchettiamo le query come se fossero state scritte in un form HTML
+      const paramsRoads = new URLSearchParams();
+      paramsRoads.append("data", queryRoads);
+
+      const paramsTrails = new URLSearchParams();
+      paramsTrails.append("data", queryTrails);
+
+      // Chiamata diretta a Overpass per le Strade
       const respRoads = await axios.post<OverpassResponse>(
-        proxyUrl,
-        queryRoads,
-        { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
+        overpassUrl,
+        paramsRoads, // Passiamo l'oggetto URLSearchParams
+        { 
+          signal: controller.signal, 
+          headers: { 
+            // Questo header è la chiave magica per non far scattare il CORS
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" 
+          } 
+        }
       );
 
+      // Chiamata diretta a Overpass per i Sentieri
       const respTrails = await axios.post<OverpassResponse>(
-        proxyUrl,
-        queryTrails,
-        { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
+        overpassUrl,
+        paramsTrails,
+        { 
+          signal: controller.signal, 
+          headers: { 
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" 
+          } 
+        }
       );
 
       const clippedRoads: LatLngTuple[][] = [];
