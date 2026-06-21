@@ -43,20 +43,21 @@ export const useAreaProcessing = (
     setArea(areaKm2);
 
     const polyString = polygonPoints.map((p) => `${p[0]} ${p[1]}`).join(" ");
-    const queryRoads = `[out:json][timeout:100];way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|road|motorway_link|trunk_link|service)$\"](poly:\"${polyString}\");out body geom;`;
-    const queryTrails = `[out:json][timeout:100];way[\"highway\"~\"^(pedestrian|track|path|footway|bridleway|steps|via_ferrata|cycleway)$\"](poly:\"${polyString}\");out body geom;`;
+    const timeout = areaKm2 < 50 ? 25 : areaKm2 < 200 ? 60 : 120;
+    const queryRoads = `[out:json][timeout:${timeout}];way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|road|motorway_link|trunk_link|service)$\"](poly:\"${polyString}\");out body geom;`;
+    const queryTrails = `[out:json][timeout:${timeout}];way[\"highway\"~\"^(pedestrian|track|path|footway|bridleway|steps|via_ferrata|cycleway)$\"](poly:\"${polyString}\");out body geom;`;
 
     try {
       const respRoads = await axios.post<OverpassResponse>(
-        "/api/overpass",
-        { query: queryRoads },
-        { signal: controller.signal, headers: { "Content-Type": "application/json" } }
+        "https://overpass.kumi.systems/api/interpreter",
+        queryRoads,
+        { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
       );
 
       const respTrails = await axios.post<OverpassResponse>(
-        "/api/overpass",
-        { query: queryTrails },
-        { signal: controller.signal, headers: { "Content-Type": "application/json" } }
+        "https://overpass-api.de/api/interpreter",
+        queryTrails,
+        { signal: controller.signal, headers: { "Content-Type": "text/plain" } }
       );
 
       const clippedRoads: LatLngTuple[][] = [];
