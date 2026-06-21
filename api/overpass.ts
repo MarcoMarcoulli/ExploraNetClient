@@ -13,18 +13,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing query parameter in body' });
     }
     
-    // Usiamo una configurazione esplicita per evitare che Axios aggiunga header non graditi
     const response = await axios({
       method: 'post',
       url: 'https://overpass-api.de/api/interpreter',
-      data: query, // Passiamo la stringa nuda e cruda
+      data: query,
       headers: { 
         'Content-Type': 'text/plain',
-        // Forziamo l'Accept a */* o stringa vuota per non far insospettire il server Apache
-        'Accept': '*/*' 
+        'Accept': '*/*',
+        // Sostituiamo l'identità di Axios con quella di un browser comune per ingannare Apache
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
       },
-      // Evita che Axios provi a parsare l'output se non è strettamente necessario, 
-      // anche se Overpass risponde in JSON pulito
       responseType: 'json' 
     });
     
