@@ -12,10 +12,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!query) {
       return res.status(400).json({ error: 'Missing query parameter in body' });
     }
+      
+    const urlWithQuery = `https://overpass.kumi.systems/api/interpreter?data=${encodeURIComponent(query)}`;
     
     const response = await axios({
       method: 'post',
-      url: 'https://overpass-api.de/api/interpreter',
+      url: urlWithQuery,
       data: query,
       headers: { 
         'Content-Type': 'text/plain',
